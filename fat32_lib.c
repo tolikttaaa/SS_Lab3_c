@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "fat32_lib.h"
 
 unsigned int get_fat_table_value(unsigned int active_cluster, unsigned int first_fat_sector, unsigned int sector_size, int fd) {
@@ -223,9 +224,10 @@ int change_dir(struct partition_value *value, const unsigned char *dir_name) {
 }
 
 struct partition_value *open_partition(const char *path) {
-    struct fat_BS *fat_boot;
+    fprintf(stderr, "Path: \'%s\'\n", path);
     int fd = open(path, O_RDONLY, 00666);
     if (fd != -1) {
+        struct fat_BS *fat_boot;
         fat_boot = malloc(sizeof(struct fat_BS));
         pread(fd, fat_boot, sizeof(struct fat_BS), 0);
 

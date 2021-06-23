@@ -79,7 +79,6 @@ void add_disk_partition_info(struct disk_info *info, struct dirent *sys_block_ch
 }
 
 char *run_list_mode() {
-    fprintf(stderr, "I'm here");
     const int MAX_DISKS = 256;
     const char *sys_block_path = "/sys/block/";
     struct disk_info *disks = (struct disk_info *) malloc(MAX_DISKS * sizeof(struct disk_info));

@@ -8,12 +8,6 @@
 #include <dirent.h>
 #include "stdio.h"
 
-int error(const char *msg) {
-    fprintf(stderr,"Error: %s\n", msg);
-
-    return -1;
-}
-
 int check_directory(const char *path) {
     DIR *dir = opendir(path);
     if (dir) return 1;

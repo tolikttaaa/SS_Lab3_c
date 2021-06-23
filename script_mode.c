@@ -152,12 +152,6 @@ void parse_partition(struct partition_value *partition, char *path) {
 }
 
 struct partition_value *get_partition(char* path) {
-    const char *part = get_before(path, '/');
-
-    struct partition_value *partition = open_partition(part);
-
-    remove_before(path, '/');
-
-    parse_partition(partition, path);
+    struct partition_value *partition = open_partition(path);
     return partition;
 }
