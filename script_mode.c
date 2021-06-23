@@ -143,14 +143,6 @@ int cp_command(struct partition_value *partition, char* source, char* to) {
     return 1;
 }
 
-void parse_partition(struct partition_value *partition, char *path) {
-    while (strlen(path) > 0) {
-        char *dir = get_before(path, '/');
-        cd_command(partition, dir);
-        remove_before(path, '/');
-    }
-}
-
 struct partition_value *get_partition(char* path) {
     struct partition_value *partition = open_partition(path);
     return partition;

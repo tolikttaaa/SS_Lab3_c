@@ -9,7 +9,7 @@
 JNIEXPORT jlong JNICALL Java_com_ifmo_ttaaa_ss_1lab3_app_ScriptModeLib_getPartition (JNIEnv *jenv, jobject jobj, jstring path) {
     (void)&jobj;
     struct partition_value *partition = get_partition((char *) (*jenv)->GetStringUTFChars(jenv, path, 0));
-    return (long) partition;
+    return partition ? (long) partition : 0l;
 }
 
 JNIEXPORT jstring JNICALL Java_com_ifmo_ttaaa_ss_1lab3_app_ScriptModeLib_lsCommand(JNIEnv *jenv, jobject jobj, jlong partPointer) {

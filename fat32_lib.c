@@ -224,8 +224,8 @@ int change_dir(struct partition_value *value, const unsigned char *dir_name) {
 }
 
 struct partition_value *open_partition(const char *path) {
-    fprintf(stderr, "Path: \'%s\'\n", path);
     int fd = open(path, O_RDONLY, 00666);
+
     if (fd != -1) {
         struct fat_BS *fat_boot;
         fat_boot = malloc(sizeof(struct fat_BS));
@@ -234,6 +234,9 @@ struct partition_value *open_partition(const char *path) {
         unsigned int total_sectors = fat_boot->large_sectors_count;
         unsigned int fat_size = (fat_boot->sectors_per_fat_small == 0)
                 ? fat_boot->sectors_per_fat_large : fat_boot->sectors_per_fat_small;
+        if (fat_boot->bytes_per_sector == 0) {
+            return NULL;
+        }
         unsigned int root_dir_sectors =
                 ((fat_boot->root_entry_count * 32) + (fat_boot->bytes_per_sector - 1)) / fat_boot->bytes_per_sector;
         unsigned int first_data_sector =
@@ -241,10 +244,14 @@ struct partition_value *open_partition(const char *path) {
         unsigned int data_sectors = total_sectors -
                                  (fat_boot->reserved_sectors_count + (fat_boot->table_count * fat_size) +
                                   root_dir_sectors);
+        if (fat_boot->sectors_per_cluster == 0) {
+            return NULL;
+        }
         unsigned int total_clusters = data_sectors / fat_boot->sectors_per_cluster;
 
         struct fs_info *fs = malloc(sizeof(struct fs_info));
         pread(fd, fs, sizeof(struct fs_info), fat_boot->fs_info_sector_number * fat_boot->bytes_per_sector);
+
 
         if (total_clusters >= 65525 && total_clusters < 268435445
             && fs->lead_signature == 0x41615252
